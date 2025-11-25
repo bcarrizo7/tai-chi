@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tai Chi Santiago – Arte Marcial Tradicional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1a1a1a",
+                        accent: "#d4af37"
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #fafafa;
+            overflow-x: hidden;
+        }
+
+        .nav-blur {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Menú hamburguesa */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 60;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #1a1a1a;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 55;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu nav {
+            padding: 100px 30px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .mobile-menu a {
+            font-size: 18px;
+            font-weight: 500;
+            color: #1a1a1a;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-menu a:hover {
+            color: #d4af37;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .desktop-nav {
+                display: none;
+            }
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+        }
+
+        /* Carrusel de imágenes Tai Chi */
+        .taichi-carousel {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .taichi-carousel {
+                max-width: 250px;
+            }
+        }
+
+        .taichi-carousel img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .taichi-carousel img.active {
+            opacity: 1;
+        }
+
+        /* Efectos hover sutiles */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Botones con borde cool */
+        .btn-primary {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-secondary {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .btn-secondary:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Línea decorativa */
+        .accent-line {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37, transparent);
+        }
+
+        /* Animación de entrada */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Parallax suave */
+        .parallax-img {
+            transition: transform 0.3s ease-out;
+        }
+
+        /* WhatsApp button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+
+        /* Video responsive */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body class="text-gray-900">
+
+    <!-- NAVBAR -->
+    <header class="fixed top-0 w-full z-50 nav-blur border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-20">
+            <div class="flex items-center gap-3">
+                <div class="text-2xl">☯️</div>
+                <div>
+                    <p class="font-bold text-lg text-primary">Tai Chi Santiago</p>
+                    <p class="text-xs text-gray-500">Arte Marcial Tradicional</p>
+                </div>
+            </div>
+
+            <!-- Menú Hamburguesa -->
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Menú Desktop -->
+            <nav class="desktop-nav hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#practica" class="hover:text-accent transition-colors">Práctica</a>
+                <a href="#beneficios" class="hover:text-accent transition-colors">Beneficios</a>
+                <a href="#maestros" class="hover:text-accent transition-colors">Maestros</a>
+                <a href="#contacto" class="bg-primary text-white px-6 py-2.5 rounded-full hover:bg-gray-800 transition">
+                    Contactar
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Menú Mobile -->
+    <div class="mobile-menu" id="mobileMenu">
+        <nav>
+            <a href="#practica" onclick="closeMenu()">Práctica</a>
+            <a href="#beneficios" onclick="closeMenu()">Beneficios</a>
+            <a href="#maestros" onclick="closeMenu()">Maestros</a>
+            <a href="#contacto" onclick="closeMenu()">Contacto</a>
+        </nav>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero-gradient text-white pt-32 pb-20">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8 fade-in">
+                    <div class="accent-line"></div>
+                    <h1 class="text-5xl lg:text-6xl font-bold leading-tight">
+                        Tai Chi<br />
+                        <span class="text-accent">Tradicional</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 font-light">
+                        Arte marcial interno chino para el equilibrio, la salud y la serenidad mental.
+                    </p>
+
+                    <!-- Carrusel para mobile/tablet -->
+                    <div class="lg:hidden fade-in mb-8">
+                        <div class="taichi-carousel" id="taichiCarouselMobile">
+                            <img src="taichi 1 mini.png" alt="Postura 1" class="active">
+                            <img src="taichi 2 mini.png" alt="Postura 2">
+                            <img src="taichi 3 mini.png" alt="Postura 3">
+                            <!--  <img src="taichi 4 mini.png" alt="Postura 4"> -->
+                            <img src="taichi 5 mini.png" alt="Postura 5">
+                            <!--   <img src="taichi 6 mini.png" alt="Postura 6"> -->
+                            <!--    <img src="taichi 7 mini.png" alt="Postura 7"> -->
+                            <!--   <img src="taichi 8 mini.png" alt="Postura 8"> -->
+                            <!--   <img src="taichi 9 mini.png" alt="Postura 9"> -->
+                            <!--   <img src="taichi 10 mini.png" alt="Postura 10"> -->
+                            <!--   <img src="taichi 11 mini.png" alt="Postura 11"> -->
+                            <!--   <img src="taichi 12 mini.png" alt="Postura 12"> -->
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#contacto"
+                            class="btn-primary bg-accent text-primary px-8 py-4 rounded-full font-semibold hover:bg-yellow-500 transition text-center">
+                            Clase de Prueba
+                        </a>
+                        <a href="#practica"
+                            class="btn-secondary border-white/30 px-8 py-4 rounded-full font-semibold hover:bg-white/10 transition text-center">
+                            Conocer Más
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Carrusel para desktop -->
+                <div class="hidden lg:block fade-in">
+                    <div class="taichi-carousel" id="taichiCarousel">
+                        <img src="taichi 1 mini.png" alt="Postura 1" class="active">
+                        <img src="taichi 2 mini.png" alt="Postura 2">
+                        <img src="taichi 3 mini.png" alt="Postura 3">
+                        <!-- <img src="taichi 4 mini.png" alt="Postura 4"> -->
+                        <img src="taichi 5 mini.png" alt="Postura 5">
+                        <!-- <img src="taichi 6 mini.png" alt="Postura 6"> -->
+                        <!-- <img src="taichi 7 mini.png" alt="Postura 7"> -->
+                        <!-- <img src="taichi 8 mini.png" alt="Postura 8"> -->
+                        <!-- <img src="taichi 9 mini.png" alt="Postura 9"> -->
+                        <!--  <img src="taichi 10 mini.png" alt="Postura 10"> -->
+                        <!-- <img src="taichi 11 mini.png" alt="Postura 11"> -->
+                        <!-- <img src="taichi 12 mini.png" alt="Postura 12"> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUÉ ES EL TAI CHI -->
+    <section id="practica" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-in">
+                    <img src="imagenes/taichi.png" alt="Práctica de Tai Chi"
+                        class="rounded-2xl shadow-2xl w-full parallax-img">
+                </div>
+                <div class="space-y-6 fade-in">
+                    <div class="accent-line"></div>
+                    <h2 class="text-4xl font-bold text-primary">La Esencia del Tai Chi</h2>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        El Tai Chi es un sistema completo de movimiento consciente que integra posturas marciales,
+                        respiración profunda y meditación. Cada gesto fluye con propósito, creando armonía entre cuerpo
+                        y mente.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4">
+                            <div class="text-2xl">🌱</div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Equilibrio y Coordinación</h4>
+                                <p class="text-gray-600 text-sm">Mejora la alineación corporal y el balance en cada
+                                    movimiento.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="text-2xl">🧠</div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Concentración Mental</h4>
+                                <p class="text-gray-600 text-sm">Entrena la atención plena y la memoria kinestésica.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="text-2xl">💨</div>
+                            <div>
+                                <h4 class="font-semibold mb-1">Respiración Consciente</h4>
+                                <p class="text-gray-600 text-sm">Calma el sistema nervioso y reduce el estrés.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BENEFICIOS -->
+    <section id="beneficios" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <div class="accent-line mx-auto mb-6"></div>
+                <h2 class="text-4xl font-bold text-primary mb-4">Beneficios Comprobados</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Respaldado por estudios científicos y reconocido por la UNESCO como Patrimonio Cultural Inmaterial.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl p-8 card-hover fade-in">
+                    <div class="text-4xl mb-4">💪</div>
+                    <h3 class="text-xl font-bold mb-3">Salud Física</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• Mejora cardiovascular</li>
+                        <li>• Flexibilidad articular</li>
+                        <li>• Fortalecimiento muscular</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 card-hover fade-in">
+                    <div class="text-4xl mb-4">🧘</div>
+                    <h3 class="text-xl font-bold mb-3">Bienestar Mental</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• Reducción de ansiedad</li>
+                        <li>• Mayor claridad mental</li>
+                        <li>• Mejor calidad de sueño</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 card-hover fade-in">
+                    <div class="text-4xl mb-4">⚖️</div>
+                    <h3 class="text-xl font-bold mb-3">Equilibrio Vital</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>• Prevención de caídas</li>
+                        <li>• Estabilidad postural</li>
+                        <li>• Conciencia corporal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAESTROS -->
+    <section id="maestros" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <div class="accent-line mx-auto mb-6"></div>
+                <h2 class="text-4xl font-bold text-primary mb-4">Linaje de Maestros</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Transmisión directa del conocimiento tradicional a través de una cadena ininterrumpida de maestros.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8 fade-in">
+                    <div class="space-y-4">
+                        <h3 class="text-2xl font-bold">Formación Auténtica</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Nuestros instructores han sido formados en el estilo Yang tradicional, manteniendo una línea
+                            directa de transmisión con grandes maestros de China, Latinoamérica y Europa.
+                        </p>
+                    </div>
+                    <div class="bg-gray-50 rounded-xl p-6">
+                        <h4 class="font-bold mb-3">Credenciales</h4>
+                        <ul class="space-y-2 text-gray-600">
+                            <li>• +15 años de práctica continua</li>
+                            <li>• Especialización en Tai Chi para salud</li>
+                            <li>• Formación con maestros internacionales</li>
+                            <li>• Enfoque terapéutico y postural</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="fade-in lg:order-last">
+                    <img src="imagenes/taichi 2.png" alt="Maestro de Tai Chi" class="rounded-2xl shadow-2xl w-full">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TUTORIALES -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <div class="accent-line mx-auto mb-6"></div>
+                <h2 class="text-4xl font-bold text-primary mb-4">Practica Desde Casa</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Tutoriales gratuitos para comenzar tu práctica de Tai Chi.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl overflow-hidden card-hover fade-in">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/E4JP9NaVAvc" title="Tutorial 1" frameborder="0"
+                            allowfullscreen></iframe>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold mb-2">Tai Chi para Principiantes</h3>
+                        <p class="text-sm text-gray-600">Clase completa de iniciación al Tai Chi.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl overflow-hidden card-hover fade-in">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/xstsvNkYKIw" title="Tutorial 2" frameborder="0"
+                            allowfullscreen></iframe>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold mb-2">Rutina Básica de Tai Chi</h3>
+                        <p class="text-sm text-gray-600">Secuencia para calma y conexión.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl overflow-hidden card-hover fade-in">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/MPHD_RsBa_Y" title="Tutorial 3" frameborder="0"
+                            allowfullscreen></iframe>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold mb-2">Respiración y Relajación</h3>
+                        <p class="text-sm text-gray-600">Práctica para reducir el estrés.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="py-24 bg-primary text-white">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+            <div class="fade-in space-y-8">
+                <div class="accent-line mx-auto"></div>
+                <h2 class="text-4xl font-bold">Comienza Tu Práctica</h2>
+                <p class="text-xl text-gray-300">
+                    📍 Teno 8787, Santiago de Chile
+                </p>
+                <p class="text-gray-300 max-w-2xl mx-auto">
+                    Clases personalizadas en grupos reducidos. Horarios flexibles mañana y tarde. Seguimiento continuo
+                    por WhatsApp.
+                </p>
+                <a href="https://wa.me/56999917833?text=Hola,%20me%20interesa%20tomar%20clases%20de%20Tai%20Chi"
+                    target="_blank"
+                    class="btn-primary inline-block bg-accent text-primary px-10 py-4 rounded-full font-bold text-lg hover:bg-yellow-500 transition text-center">
+                    Agenda tu Clase de Prueba
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black text-gray-400 py-8">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <p class="text-sm">© <span id="year"></span> Escuela de Tai Chi Santiago. La calma no es ausencia de
+                movimiento, es moverse con conciencia.</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/56999917833?text=Hola,%20me%20interesa%20el%20Tai%20Chi" target="_blank"
+        class="whatsapp-float">
+        <div
+            class="bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition">
+            <span class="text-3xl">💬</span>
+        </div>
+    </a>
+
+    <script>
+        // Menú hamburguesa
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+
+        function closeMenu() {
+            menuToggle.classList.remove('active');
+            mobileMenu.classList.remove('active');
+        }
+
+        // Carrusel automático para ambos carruseles
+        function initCarousel(carouselId) {
+            let currentIndex = 0;
+            const carousel = document.getElementById(carouselId);
+            if (!carousel) return;
+
+            const images = carousel.querySelectorAll('img');
+            const totalImages = images.length;
+
+            function showNextImage() {
+                images[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % totalImages;
+                images[currentIndex].classList.add('active');
+            }
+
+            setInterval(showNextImage, 1500);
+        }
+
+        initCarousel('taichiCarousel');
+        initCarousel('taichiCarouselMobile');
+
+        // Animación de entrada al scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Parallax suave en imágenes
+        document.addEventListener('mousemove', (e) => {
+            const images = document.querySelectorAll('.parallax-img');
+            images.forEach(img => {
+                const speed = 0.02;
+                const x = (window.innerWidth - e.pageX * speed) / 100;
+                const y = (window.innerHeight - e.pageY * speed) / 100;
+                img.style.transform = `translateX(${x}px) translateY(${y}px)`;
+            });
+        });
+
+        // Año actual
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+
+</html>
