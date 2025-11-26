@@ -36,6 +36,23 @@
             -webkit-backdrop-filter: blur(12px);
         }
 
+        .mobile-header-transparent {
+            background: transparent !important;
+            border-color: transparent !important;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+
+        .mobile-header-transparent .brand-title,
+        .mobile-header-transparent .brand-subtitle,
+        .mobile-header-transparent .logo-icon {
+            color: #ffffff !important;
+        }
+
+        .mobile-header-transparent .menu-toggle span {
+            background: #ffffff;
+        }
+
         /* Menú hamburguesa */
         .menu-toggle {
             display: none;
@@ -111,7 +128,10 @@
         }
 
         .hero-gradient {
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.06), transparent 35%),
+                radial-gradient(circle at 80% 0%, rgba(212, 175, 55, 0.12), transparent 32%),
+                linear-gradient(135deg, #050505 0%, #0f0f0f 50%, #1a1a1a 100%);
         }
 
         /* Carrusel de imágenes Tai Chi */
@@ -260,13 +280,13 @@
 <body class="text-gray-900">
 
     <!-- NAVBAR -->
-    <header class="fixed top-0 w-full z-50 nav-blur border-b border-gray-200">
+    <header id="mainHeader" class="fixed top-0 w-full z-50 nav-blur border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-20">
             <div class="flex items-center gap-3">
-                <div class="text-2xl">☯️</div>
+                <div class="text-2xl logo-icon">☯️</div>
                 <div>
-                    <p class="font-bold text-lg text-primary">Tai Chi Santiago</p>
-                    <p class="text-xs text-gray-500">Arte Marcial Tradicional</p>
+                    <p class="font-bold text-lg text-primary brand-title">Tai Chi Santiago</p>
+                    <p class="text-xs text-gray-500 brand-subtitle">Arte Marcial Tradicional</p>
                 </div>
             </div>
 
@@ -574,7 +594,10 @@
         class="whatsapp-float">
         <div
             class="bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl hover:bg-green-600 transition">
-            <span class="text-3xl">💬</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" class="w-8 h-8" aria-hidden="true" focusable="false">
+                <path fill="currentColor"
+                    d="M16.02 6C10.495 6 6 10.206 6 15.396c0 2.083.734 4.013 1.986 5.563L6 26l5.182-1.537a10.3 10.3 0 0 0 4.838 1.207c5.525 0 10.02-4.207 10.02-9.396C26.04 10.206 21.545 6 16.02 6Zm0 17.143a8.1 8.1 0 0 1-4.13-1.117l-.297-.176-3.073.914.909-2.69-.193-.277A7.45 7.45 0 0 1 8.17 15.4c0-4.143 3.53-7.512 7.85-7.512s7.848 3.37 7.848 7.512-3.53 7.514-7.85 7.514Zm4.357-5.615c-.238-.12-1.408-.692-1.627-.77-.218-.082-.377-.12-.537.12-.16.238-.616.77-.758.93-.138.16-.277.18-.516.06-.238-.12-1.01-.37-1.923-1.18-.71-.63-1.188-1.407-1.326-1.645-.139-.238-.015-.367.105-.487.109-.108.238-.278.358-.417.12-.14.16-.238.238-.398.08-.16.04-.298-.02-.418-.06-.12-.536-1.293-.735-1.782-.194-.47-.392-.4-.536-.41l-.457-.01c-.16 0-.417.06-.636.298-.219.238-.836.81-.836 1.975s.857 2.288.977 2.447c.12.16 1.692 2.683 4.104 3.76.574.247 1.022.395 1.372.507.576.184 1.1.158 1.515.096.463-.07 1.408-.575 1.606-1.13.2-.557.2-1.034.14-1.133-.06-.098-.218-.16-.456-.28Z" />
+            </svg>
         </div>
     </a>
 
@@ -582,11 +605,26 @@
         // Menú hamburguesa
         const menuToggle = document.getElementById('menuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
+        const header = document.getElementById('mainHeader');
 
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             mobileMenu.classList.toggle('active');
         });
+
+        const updateHeaderTransparency = () => {
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile && window.scrollY < 12) {
+                header?.classList.add('mobile-header-transparent');
+            } else {
+                header?.classList.remove('mobile-header-transparent');
+            }
+        };
+
+        updateHeaderTransparency();
+        window.addEventListener('scroll', updateHeaderTransparency);
+        window.addEventListener('resize', updateHeaderTransparency);
 
         function closeMenu() {
             menuToggle.classList.remove('active');
